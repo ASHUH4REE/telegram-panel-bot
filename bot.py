@@ -26,6 +26,7 @@ cooldowns = {}
 
 COOLDOWN = 10
 VIP_LINK = "https://t.me/ASHUH4REEE"
+REGISTER_LINK = "https://www.jaiclub41.com/#/register?invitationCode=76751105547"
 
 BTN_SIGNAL = "🎯 GET SIGNAL"
 BTN_VIP = "👑 VIP SIGNAL"
@@ -44,6 +45,14 @@ def main_menu():
     return InlineKeyboardMarkup([
         [InlineKeyboardButton(BTN_SIGNAL, callback_data="signal")],
         [InlineKeyboardButton(BTN_VIP, url=VIP_LINK)],
+        [InlineKeyboardButton("📝 REGISTER NOW", callback_data="register")]
+    ])
+
+def next_menu():
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("🎯 GET NEXT PREDICTION", callback_data="signal")],
+        [InlineKeyboardButton("👑 VIP SIGNAL", url=VIP_LINK)],
+        [InlineKeyboardButton("📝 REGISTER NOW", callback_data="register")]
     ])
 
 admin_buttons = [
@@ -116,6 +125,26 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("✅ VIP Button Updated")
         del edit_mode[uid]
 
+async def send_signal(msg):
+    multi = round(random.uniform(1.25, 4.90), 2)
+    sec = random.randint(5, 18)
+    risk = random.choice(["LOW 🟢", "MEDIUM 🟡", "HIGH 🔴"])
+    live = random.randint(180, 1500)
+    current_time = datetime.now(IST).strftime("%H:%M:%S")
+
+    await msg.edit_text(
+f"""⚡ SIGNAL READY ⚡
+
+⏰ Time: {current_time}
+🚀 Next Round: {sec}s
+💰 Cashout: {multi}x
+📊 Risk: {risk}
+👥 Live Users: {live}
+
+👑 VIP: @ASHUH4REEE""",
+        reply_markup=next_menu()
+    )
+
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global maintenance, COOLDOWN
 
@@ -124,7 +153,18 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     if query.data == "done":
-        await query.message.edit_text("⚡ ACCESS GRANTED ⚡", reply_markup=main_menu())
+        await query.message.edit_text(
+            "⚡ ACCESS GRANTED ⚡",
+            reply_markup=main_menu()
+        )
+
+    elif query.data == "register":
+        await query.message.reply_text(
+            "📝 Register under our link for signal access ⚡",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("📝 OPEN REGISTER LINK", url=REGISTER_LINK)]
+            ])
+        )
 
     elif query.data == "signal":
         now = time.time()
@@ -140,24 +180,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await msg.edit_text("📡 Reading Market...")
         await msg.edit_text("💎 Preparing Signal...")
 
-        multi = round(random.uniform(1.25, 4.90), 2)
-        sec = random.randint(5, 18)
-        risk = random.choice(["LOW 🟢", "MEDIUM 🟡", "HIGH 🔴"])
-        live = random.randint(180, 1500)
-
-        current_time = datetime.now(IST).strftime("%H:%M:%S")
-
-        await msg.edit_text(
-f"""⚡ SIGNAL READY ⚡
-
-⏰ Time: {current_time}
-🚀 Next Round: {sec}s
-💰 Cashout: {multi}x
-📊 Risk: {risk}
-👥 Live Users: {live}
-
-👑 VIP: @ASHUH4REEE"""
-        )
+        await send_signal(msg)
 
     elif uid in admin_logged:
 
@@ -234,5 +257,5 @@ app.add_handler(CommandHandler("broadcast", broadcast))
 app.add_handler(CallbackQueryHandler(button_handler))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler))
 
-print("Railway Bot Running IST Mode...")
+print("Railway Bot Running Full Upgrade...")
 app.run_polling()
