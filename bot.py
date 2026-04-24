@@ -2,6 +2,7 @@ import os
 import random
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -28,6 +29,8 @@ VIP_LINK = "https://t.me/ASHUH4REEE"
 
 BTN_SIGNAL = "🎯 GET SIGNAL"
 BTN_VIP = "👑 VIP SIGNAL"
+
+IST = ZoneInfo("Asia/Kolkata")
 
 join_buttons = [
     [InlineKeyboardButton("🔥 Channel 1", url="https://t.me/+5-MI5unhqHs5OTBl")],
@@ -142,10 +145,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         risk = random.choice(["LOW 🟢", "MEDIUM 🟡", "HIGH 🔴"])
         live = random.randint(180, 1500)
 
+        current_time = datetime.now(IST).strftime("%H:%M:%S")
+
         await msg.edit_text(
 f"""⚡ SIGNAL READY ⚡
 
-⏰ Time: {datetime.now().strftime("%H:%M:%S")}
+⏰ Time: {current_time}
 🚀 Next Round: {sec}s
 💰 Cashout: {multi}x
 📊 Risk: {risk}
@@ -229,5 +234,5 @@ app.add_handler(CommandHandler("broadcast", broadcast))
 app.add_handler(CallbackQueryHandler(button_handler))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler))
 
-print("Railway Bot Running...")
+print("Railway Bot Running IST Mode...")
 app.run_polling()
