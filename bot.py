@@ -13,7 +13,7 @@ from telegram.ext import (
     filters,
 )
 
-TOKEN = "8726860078:AAE9EkygEYB02GLM7ZKbli7bLNBLccMSOfo"
+TOKEN = "8726860078:AAFzH2tgcbnvrXmZeEnmyWPtk2O11njCep0"
 
 OWNER_USERNAME = "ASHUH4REEE"
 ADMIN_PASSWORD = "A$huX991#"
